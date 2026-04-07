@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Zapiski</h2>
+    <h3>Pozdravljen {{ user }}!</h3>
+
+    {% for i in range(3) %}
+    <div class="note-block">
+        <form method="POST" action="/dashboard">
+           
+            <input type="hidden" name="note_index" value="{{ i }}">
+
+         
+            <input type="text" name="title" placeholder="Naslov zapiska" 
+                   value="{{ notes[i].title if i < notes|length else '' }}" required>
+            <br><br>
+
+            
+            <textarea name="content" cols="50" rows="10" 
+                      placeholder="Vsebina zapiska">{{ notes[i].content if i < notes|length else '' }}</textarea>
+            <br><br>
+
+            
+            <button type="submit" name="action" value="save">Shrani</button>
+            <button type="submit" name="action" value="delete">Izbriši</button>
+        </form>
+    </div>
+    <br>
+    {% endfor %}
+
+    <form method="GET" action="/logout">
+        <button type="submit">Odjava</button>
+    </form>
+</body>
+</html>

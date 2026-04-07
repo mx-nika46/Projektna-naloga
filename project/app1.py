@@ -49,10 +49,34 @@ def login():
 
     return render_template("login.html")
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["GET", "POST"])
 def dashboard():
     if "user" not in session:
         return redirect("/login")
-    return render_template("dashboard.html", user = session["user"])
+    user = users.get(User.username == session["user"])
+
+    if "notes" not in user:
+        user["notes"] = [{"title": "", "content": ""} for _ in range(3)]
+        users.update({"notes": user["notes"]}, User.username == session["user"])
+
+    if request.method == "POST":
+        action = request.form.get("action")
+        index = int(request.form.get("note_index", 0))
+
+      
+        while len(user["notes"]) <= index:
+            user["notes"].append({"title": "", "content": ""})
+
+        if action == "save":
+            user["notes"][index]["title"] = request.form.get("title", "")
+            user["notes"][index]["content"] = request.form.get("content", "")
+        elif action == "delete":
+            user["notes"][index] = {"title": "", "content": ""}
+
+       
+        users.update({"notes": user["notes"]}, User.username == session["user"])
+
+    user = users.get(User.username == session["user"])
+    return render_template("dashboard.html", user=session["user"], notes=user["notes"])
 
 app.run(debug=1)
