@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objave - {{ username }}</title>
+</head>
+<body class="auth-page">
+    <div class="container">
+        <div class="header">
+            <h1>Dobrodošli - a, {{ username }}!</h1>
+            <a href="/logout" class="logout">Odjava</a>
+        </div>
+
+        <!-- Dodaj novo objavo -->
+        <div class="new-post">
+            <h2>Nova objava</h2>
+            <form method="POST" action="/dodaj_objavo">
+                <textarea name="besedilo" rows="4" placeholder="Kaj imaš novega?"></textarea>
+                <input type="text" name="slika_url" placeholder="URL slike (neobvezno)">
+                <button type="submit">Objavi</button>
+            </form>
+        </div>
+
+        <!-- Seznam objav -->
+        <h2>Zadnje objave</h2>
+        {% for post in posts %}
+        <div class="post">
+            <div class="post-header">
+                <strong>{{ post.avtor }}</strong>
+                <small>{{ post.datum }}</small>
+            </div>
+            <p>{{ post.besedilo }}</p>
+            {% if post.slika %}
+                <img src="{{ post.slika }}" alt="Slika">
+            {% endif %}
+            
+            {% if post.avtor == username %}
+            <button class="delete-btn" onclick="izbrisiObjavo({{ post.doc_id }})">Izbriši</button>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        {% if not posts %}
+        <p>Ni še nobene objave.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        function izbrisiObjavo(post_id) {
+            if (confirm("Ali res želiš izbrisati to objavo?")) {
+                fetch(`/api/izbrisi/${post_id}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message || "Napaka pri brisanju");
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

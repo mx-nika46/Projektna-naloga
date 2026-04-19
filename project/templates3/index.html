@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Izgubljene živali</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body class="main-page">
+    <nav class="navbar">
+        <div class="nav-logo">🐾 Izgubljene živali</div>
+        <div class="nav-links">
+            {% if session.username %}
+                <span>Pozdravljeni, <strong>{{ session.username }}</strong></span>
+                <a href="/dodaj" class="btn btn-primary">+ Dodaj oglas</a>
+                <a href="/logout3" class="btn btn-outline">Odjava</a>
+            {% else %}
+                <a href="/login3" class="btn btn-outline">Prijava</a>
+                <a href="/register3" class="btn btn-primary">Registracija</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Filtri -->
+        <form method="GET" class="filter-bar">
+            <input type="text" name="iskanje" placeholder="Išči po imenu, opisu, lokaciji..." value="{{ iskanje }}">
+            <select name="vrsta">
+                <option value="">Vse vrste</option>
+                <option value="pes" {% if vrsta == 'pes' %}selected{% endif %}>🐶 Pes</option>
+                <option value="mačka" {% if vrsta == 'mačka' %}selected{% endif %}>🐱 Mačka</option>
+                <option value="ptica" {% if vrsta == 'ptica' %}selected{% endif %}>🐦 Ptica</option>
+                <option value="drugo" {% if vrsta == 'drugo' %}selected{% endif %}>🐾 Drugo</option>
+            </select>
+            <select name="status">
+                <option value="">Vsi statusi</option>
+                <option value="izgubljena" {% if status == 'izgubljena' %}selected{% endif %}>❌ Izgubljena</option>
+                <option value="najdena" {% if status == 'najdena' %}selected{% endif %}>✅ Najdena</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filtriraj</button>
+            <a href="/" class="btn btn-outline">Ponastavi</a>
+        </form>
+
+        <!-- Oglasi -->
+        <div class="oglasi-grid">
+            {% for o in oglasi %}
+            <div class="oglas-card {% if o.status == 'najdena' %}najdena{% endif %}">
+                {% if o.slika_url %}
+                    <img src="{{ o.slika_url }}" alt="Slika živali">
+                {% else %}
+                    <div class="no-image">🐾</div>
+                {% endif %}
+                <div class="oglas-info">
+                    <div class="oglas-header">
+                        <span class="vrsta-badge">{{ o.vrsta }}</span>
+                        <span class="status-badge {{ o.status }}">{{ o.status }}</span>
+                    </div>
+                    <h2>{{ o.ime_zivali }}</h2>
+                    <p class="lokacija">📍 {{ o.lokacija }}</p>
+                    <p class="opis">{{ o.opis[:100] }}{% if o.opis|length > 100 %}...{% endif %}</p>
+                    <div class="oglas-footer">
+                        <small>{{ o.datum }} · {{ o.username }}</small>
+                        <a href="/oglas/{{ o.id }}" class="btn btn-primary btn-sm">Več info</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not oglasi %}
+            <div class="no-results">
+                <p>🔍 Ni oglasov ki ustrezajo iskanju.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

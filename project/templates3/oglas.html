@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ oglas.ime_zivali }} - Izgubljene živali</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body class="main-page">
+    <nav class="navbar">
+        <div class="nav-logo">🐾 Izgubljene živali</div>
+        <div class="nav-links">
+            <a href="/" class="btn btn-outline">← Nazaj</a>
+            {% if session.username %}
+                <a href="/logout3" class="btn btn-outline">Odjava</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="oglas-detail">
+            {% if oglas.slika_url %}
+                <img src="{{ oglas.slika_url }}" alt="Slika živali" class="detail-img">
+            {% else %}
+                <div class="no-image-large">🐾</div>
+            {% endif %}
+
+            <div class="detail-info">
+                <div class="detail-header">
+                    <span class="vrsta-badge">{{ oglas.vrsta }}</span>
+                    <span class="status-badge {{ oglas.status }}" id="status-badge">{{ oglas.status }}</span>
+                </div>
+
+                <h1>{{ oglas.ime_zivali }}</h1>
+
+                <div class="detail-row">
+                    <span>📍 Lokacija:</span>
+                    <strong>{{ oglas.lokacija }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>📞 Kontakt:</span>
+                    <strong>{{ oglas.kontakt }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>👤 Objavljeno:</span>
+                    <strong>{{ oglas.username }}, {{ oglas.datum }}</strong>
+                </div>
+
+                <div class="detail-opis">
+                    <h3>Opis</h3>
+                    <p>{{ oglas.opis }}</p>
+                </div>
+
+                {% if session.user_id == oglas.user_id %}
+                <div class="owner-actions">
+                    {% if oglas.status == 'izgubljena' %}
+                    <button class="btn btn-success" onclick="oznaciNajdena({{ oglas.id }})">✅ Označi kot najdena</button>
+                    {% endif %}
+                    <button class="btn btn-danger" onclick="izbrisiOglas({{ oglas.id }})">🗑 Izbriši oglas</button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function oznaciNajdena(oglas_id) {
+            if (confirm("Ali res označiti žival kot najdeno?")) {
+                fetch(`/api/najdena/${oglas_id}`, {
+                    method: 'POST'
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        const badge = document.getElementById('status-badge');
+                        badge.textContent = 'najdena';
+                        badge.className = 'status-badge najdena';
+                        document.querySelector('.btn-success').remove();
+                    } else {
+                        alert(data.message || "Napaka");
+                    }
+                });
+            }
+        }
+
+        function izbrisiOglas(oglas_id) {
+            if (confirm("Ali res želiš izbrisati ta oglas?")) {
+                fetch(`/api/izbrisi_oglas/${oglas_id}`, {
+                    method: 'DELETE'
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/';
+                    } else {
+                        alert(data.message || "Napaka pri brisanju");
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

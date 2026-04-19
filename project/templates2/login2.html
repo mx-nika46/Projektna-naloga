@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prijava - App2</title>
+</head>
+<body class="auth-page">
+    <div class="container">
+        <h1>Prijava</h1>
+        
+        {% if request.method == 'POST' %}
+            <p class="error">Napačno uporabniško ime ali geslo!</p>
+        {% endif %}
+        
+        <form method="POST">
+            <label for="username">Uporabniško ime</label>
+            <input type="text" id="username" name="username" required autofocus>
+            
+            <label for="password">Geslo</label>
+            <input type="password" id="password" name="password" required>
+            
+            <button type="submit">Prijavi se</button>
+        </form>
+        
+        <p>Še nimaš računa? <a href="/register2">Registriraj se tukaj</a></p>
+    </div>
+</body>
+</html>
