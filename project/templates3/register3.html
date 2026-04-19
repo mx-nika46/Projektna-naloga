@@ -1,31 +1,8 @@
-<!DOCTYPE html>
-<html lang="sl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registracija - Izgubljene živali</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
-</head>
-<body class="auth-page">
-    <div class="auth-container">
-        <div class="auth-logo">🐾</div>
-        <h1>Registracija</h1>
+<h2>Register</h2>
+<form method="POST">
+    <input name="username" placeholder="Username"><br>
+    <input name="password" type="password" placeholder="Password"><br>
+    <button>Register</button>
+</form>
 
-        {% if error %}
-            <p class="error">{{ error }}</p>
-        {% endif %}
-
-        <form method="POST">
-            <label for="username">Uporabniško ime</label>
-            <input type="text" id="username" name="username" required autofocus>
-
-            <label for="password">Geslo</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Registriraj se</button>
-        </form>
-
-        <p>Že imaš račun? <a href="/login3">Prijavi se</a></p>
-    </div>
-</body>
-</html>
+<a href="/login">Login</a>

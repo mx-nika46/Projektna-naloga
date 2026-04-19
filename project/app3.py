@@ -1,181 +1,107 @@
-from flask import Flask, render_template, request, redirect, session, jsonify
-import sqlite3
-import hashlib
-import os
-from datetime import datetime
+from flask import Flask, render_template, request, redirect, session
+from tinydb import TinyDB, Query
 
-app = Flask(__name__, template_folder='templates3', static_folder="static3")
-app.secret_key = 'izgubljene_zivali_secret_123'
+app = Flask(__name__)
+app.secret_key = "skrivnost123"
 
-DB_PATH = 'db/zivali.db'
+db = TinyDB("db.json")
+users = db.table("users")
+pets = db.table("pets")
 
-def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+User = Query()
+Pet = Query()
 
-def init_db():
-    os.makedirs('db', exist_ok=True)
-    conn = get_db()
-    conn.executescript('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        );
+# HOME
+@app.route("/")
+def home():
+    if "user" in session:
+        return redirect("/dashboard")
+    return redirect("/login")
 
-        CREATE TABLE IF NOT EXISTS oglasi (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            ime_zivali TEXT NOT NULL,
-            vrsta TEXT NOT NULL,
-            opis TEXT NOT NULL,
-            lokacija TEXT NOT NULL,
-            kontakt TEXT NOT NULL,
-            slika_url TEXT,
-            status TEXT DEFAULT 'izgubljena',
-            datum TEXT NOT NULL,
-            FOREIGN KEY (user_id) REFERENCES users(id)
-        );
-    ''')
-    conn.commit()
-    conn.close()
+# REGISTER
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+        if users.search(User.username == username):
+            return "Uporabnik že obstaja"
 
+        users.insert({
+            "username": username,
+            "password": password
+        })
 
+        return redirect("/login")
 
-@app.route('/register3', methods=['GET', 'POST'])
-def register3():
-    error = None
-    if request.method == 'POST':
-        username = request.form['username']
-        password = hash_password(request.form['password'])
-        try:
-            conn = get_db()
-            conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
-            conn.commit()
-            conn.close()
-            return redirect('/login3')
-        except sqlite3.IntegrityError:
-            error = 'Uporabnik že obstaja!'
-    return render_template('register3.html', error=error)
+    return render_template("register.html")
 
-@app.route('/login3', methods=['GET', 'POST'])
-def login3():
-    error = None
-    if request.method == 'POST':
-        username = request.form['username']
-        password = hash_password(request.form['password'])
-        conn = get_db()
-        user = conn.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password)).fetchone()
-        conn.close()
-        if user:
-            session['username'] = username
-            session['user_id'] = user['id']
-            return redirect('/')
-        else:
-            error = 'Napačno uporabniško ime ali geslo!'
-    return render_template('login3.html', error=error)
+# LOGIN
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
 
-@app.route('/logout3')
-def logout3():
-    session.clear()
-    return redirect('/login3')
+        user = users.get(User.username == username)
 
+        if user and user["password"] == password:
+            session["user"] = username
+            return redirect("/dashboard")
 
+        return "Napačen login"
 
-@app.route('/')
-def index():
-    vrsta = request.args.get('vrsta', '')
-    status = request.args.get('status', '')
-    iskanje = request.args.get('iskanje', '')
+    return render_template("login.html")
 
-    conn = get_db()
-    query = "SELECT oglasi.*, users.username FROM oglasi JOIN users ON oglasi.user_id = users.id WHERE 1=1"
-    params = []
+# LOGOUT
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect("/login")
 
-    if vrsta:
-        query += " AND vrsta = ?"
-        params.append(vrsta)
-    if status:
-        query += " AND status = ?"
-        params.append(status)
-    if iskanje:
-        query += " AND (ime_zivali LIKE ? OR opis LIKE ? OR lokacija LIKE ?)"
-        params.extend([f'%{iskanje}%', f'%{iskanje}%', f'%{iskanje}%'])
+# DASHBOARD (seznam živali)
+@app.route("/dashboard")
+def dashboard():
+    if "user" not in session:
+        return redirect("/login")
 
-    query += " ORDER BY datum DESC"
-    oglasi = conn.execute(query, params).fetchall()
-    conn.close()
-    return render_template('index.html', oglasi=oglasi, vrsta=vrsta, status=status, iskanje=iskanje)
+    all_pets = pets.all()
+    return render_template("dashboard.html", pets=all_pets)
 
-@app.route('/oglas/<int:oglas_id>')
-def oglas(oglas_id):
-    conn = get_db()
-    o = conn.execute("SELECT oglasi.*, users.username FROM oglasi JOIN users ON oglasi.user_id = users.id WHERE oglasi.id = ?", (oglas_id,)).fetchone()
-    conn.close()
-    if not o:
-        return "Oglas ne obstaja", 404
-    return render_template('oglas.html', oglas=o)
+# DODAJ OBJAVO
+@app.route("/add", methods=["GET", "POST"])
+def add():
+    if "user" not in session:
+        return redirect("/login")
 
-@app.route('/dodaj', methods=['GET', 'POST'])
-def dodaj():
-    if 'user_id' not in session:
-        return redirect('/login3')
-    if request.method == 'POST':
-        conn = get_db()
-        conn.execute("""
-            INSERT INTO oglasi (user_id, ime_zivali, vrsta, opis, lokacija, kontakt, slika_url, datum)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            session['user_id'],
-            request.form['ime_zivali'],
-            request.form['vrsta'],
-            request.form['opis'],
-            request.form['lokacija'],
-            request.form['kontakt'],
-            request.form.get('slika_url', ''),
-            datetime.now().strftime('%Y-%m-%d %H:%M')
-        ))
-        conn.commit()
-        conn.close()
-        return redirect('/')
-    return render_template('dodaj.html')
+    if request.method == "POST":
+        name = request.form["name"]
+        animal = request.form["animal"]
+        description = request.form["description"]
+        location = request.form["location"]
+        contact = request.form["contact"]
+        status = request.form["status"]
 
+        pets.insert({
+            "name": name,
+            "animal": animal,
+            "description": description,
+            "location": location,
+            "contact": contact,
+            "status": status,
+            "owner": session["user"]
+        })
 
-@app.route('/api/najdena/<int:oglas_id>', methods=['POST'])
-def oznaci_najdena(oglas_id):
-    if 'user_id' not in session:
-        return jsonify({'success': False, 'message': 'Nisi prijavljen'})
-    conn = get_db()
-    oglas = conn.execute("SELECT * FROM oglasi WHERE id = ?", (oglas_id,)).fetchone()
-    if not oglas:
-        conn.close()
-        return jsonify({'success': False, 'message': 'Oglas ne obstaja'})
-    if oglas['user_id'] != session['user_id']:
-        conn.close()
-        return jsonify({'success': False, 'message': 'Nimate pravice'})
-    conn.execute("UPDATE oglasi SET status = 'najdena' WHERE id = ?", (oglas_id,))
-    conn.commit()
-    conn.close()
-    return jsonify({'success': True})
+        return redirect("/dashboard")
 
-@app.route('/api/izbrisi_oglas/<int:oglas_id>', methods=['DELETE'])
-def izbrisi_oglas(oglas_id):
-    if 'user_id' not in session:
-        return jsonify({'success': False, 'message': 'Nisi prijavljen'})
-    conn = get_db()
-    oglas = conn.execute("SELECT * FROM oglasi WHERE id = ?", (oglas_id,)).fetchone()
-    if not oglas or oglas['user_id'] != session['user_id']:
-        conn.close()
-        return jsonify({'success': False, 'message': 'Nimate pravice'})
-    conn.execute("DELETE FROM oglasi WHERE id = ?", (oglas_id,))
-    conn.commit()
-    conn.close()
-    return jsonify({'success': True})
+    return render_template("add_pet.html")
 
-if __name__ == '__main__':
-    init_db()
-    app.run(debug=True, port=5001)
+# DETAIL
+@app.route("/pet/<int:pet_id>")
+def pet_detail(pet_id):
+    pet = pets.all()[pet_id]
+    return render_template("detail.html", pet=pet)
+
+if __name__ == "__main__":
+    app.run(debug=True)

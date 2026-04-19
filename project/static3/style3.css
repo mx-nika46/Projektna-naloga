@@ -1,439 +1,68 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    background-color: #f5f7fb;
+    margin: 0;
+}
+
+.navbar {
+    background-color: #4CAF50;
+    padding: 15px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    margin-top: 30px;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 a {
     text-decoration: none;
-    color: #e8711a;
+    color: #4CAF50;
 }
 
-
-.btn {
-    display: inline-block;
-    padding: 9px 18px;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    font-weight: bold;
-    transition: opacity 0.2s;
+a:hover {
+    text-decoration: underline;
 }
 
-.btn:hover {
-    opacity: 0.85;
-}
-
-.btn-primary {
-    background-color: #e8711a;
-    color: white;
-}
-
-.btn-outline {
-    background-color: transparent;
-    border: 2px solid #e8711a;
-    color: #e8711a;
-}
-
-.btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-}
-
-.btn-sm {
-    padding: 6px 12px;
-    font-size: 13px;
-}
-
-.btn-full {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-
-.navbar {
+.form-box {
     background: white;
-    padding: 14px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.nav-logo {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #e8711a;
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.nav-links span {
-    font-size: 14px;
-    color: #555;
-}
-
-
-.main-container {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 0 20px;
-}
-
-
-.filter-bar {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 25px;
-    flex-wrap: wrap;
-    background: white;
-    padding: 15px;
+    padding: 20px;
+    width: 300px;
+    margin: auto;
+    margin-top: 100px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-}
-
-.filter-bar input,
-.filter-bar select {
-    padding: 9px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    flex: 1;
-    min-width: 150px;
-}
-
-
-.oglasi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.oglas-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    overflow: hidden;
-    transition: transform 0.2s;
-}
-
-.oglas-card:hover {
-    transform: translateY(-3px);
-}
-
-.oglas-card.najdena {
-    opacity: 0.7;
-}
-
-.oglas-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.no-image {
-    width: 100%;
-    height: 200px;
-    background: #f8f0e8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-}
-
-.oglas-info {
-    padding: 15px;
-}
-
-.oglas-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-
-.oglas-card h2 {
-    font-size: 1.2rem;
-    margin-bottom: 6px;
-}
-
-.lokacija {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-}
-
-.opis {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 12px;
-    line-height: 1.4;
-}
-
-.oglas-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.oglas-footer small {
-    color: #999;
-    font-size: 12px;
-}
-
-
-.vrsta-badge {
-    background: #f8f0e8;
-    color: #e8711a;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: capitalize;
-}
-
-.status-badge {
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: capitalize;
-}
-
-.status-badge.izgubljena {
-    background: #fdecea;
-    color: #dc3545;
-}
-
-.status-badge.najdena {
-    background: #e8f5e9;
-    color: #28a745;
-}
-
-
-.no-results {
-    grid-column: 1 / -1;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     text-align: center;
-    padding: 60px;
-    color: #999;
-    font-size: 1.1rem;
-}
-
-
-.oglas-detail {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-}
-
-.detail-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    max-height: 500px;
-}
-
-.no-image-large {
-    width: 100%;
-    height: 300px;
-    background: #f8f0e8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 6rem;
-}
-
-.detail-info {
-    padding: 30px;
-}
-
-.detail-header {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.detail-info h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #222;
-}
-
-.detail-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
-    font-size: 15px;
-    align-items: center;
-}
-
-.detail-row span {
-    color: #666;
-    min-width: 100px;
-}
-
-.detail-opis {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.detail-opis h3 {
-    margin-bottom: 10px;
-    color: #444;
-}
-
-.detail-opis p {
-    line-height: 1.6;
-    color: #555;
-}
-
-.owner-actions {
-    margin-top: 25px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-
-.form-card {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    padding: 35px;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.form-card h1 {
-    margin-bottom: 25px;
-    color: #e8711a;
-}
-
-.form-group {
-    margin-bottom: 18px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 6px;
-    color: #444;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 11px 13px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
-}
-
-.form-group textarea {
-    resize: vertical;
-}
-
-
-body.auth-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f0e8;
-}
-
-.auth-container {
-    background: white;
-    padding: 40px 35px;
-    border-radius: 14px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-    width: 100%;
-    max-width: 420px;
-}
-
-.auth-logo {
-    text-align: center;
-    font-size: 3rem;
-    margin-bottom: 10px;
-}
-
-.auth-container h1 {
-    text-align: center;
-    color: #e8711a;
-    margin-bottom: 25px;
-}
-
-.auth-container label {
-    display: block;
-    font-weight: bold;
-    margin: 10px 0 5px;
-    color: #444;
-}
-
-.auth-container input {
-    width: 100%;
-    padding: 11px 13px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
-}
-
-.auth-container button {
-    width: 100%;
-    padding: 13px;
-    background-color: #e8711a;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-    font-weight: bold;
-}
-
-.auth-container button:hover {
-    background-color: #d46215;
-}
-
-.auth-container p {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-}
-
-.error {
-    color: #dc3545;
-    background: #fdecea;
-    padding: 10px;
-    border-radius: 6px;
-    text-align: center;
-    margin-bottom: 15px;
-    font-size: 14px;
 }

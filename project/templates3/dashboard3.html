@@ -1,0 +1,17 @@
+<h2>Izgubljeni ljubljenčki</h2>
+
+<a href="/add">+ Dodaj objavo</a>
+<a href="/logout">Logout</a>
+
+<hr>
+
+{% for pet in pets %}
+<div style="border:1px solid black; margin:10px; padding:10px;">
+    <h3>{{ pet.name }} ({{ pet.animal }})</h3>
+    <p>{{ pet.description }}</p>
+    <p>{{ pet.location }}</p>
+    <p>{{ pet.status }}</p>
+
+    <a href="/pet/{{ loop.index0 }}">Poglej</a>
+</div>
+{% endfor %}
