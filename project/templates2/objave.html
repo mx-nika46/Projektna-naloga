@@ -1,87 +1,36 @@
 <!DOCTYPE html>
-<html lang="sl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Objave - {{ username }}</title>
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
-</head>
-
+<html>
+<head><link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}"></head>
 <body>
 
-    <!-- NAVBAR -->
-    <div class="navbar">
-        <h2>App2</h2>
-        <div>
-            <span>{{ username }}</span> |
-            <a href="/logout">Odjava</a>
-        </div>
-    </div>
+<h1>Objave</h1>
 
-    <div class="container">
+<form method="POST" action="/add2">
+    <input name="text" placeholder="Napiši objavo" required>
+    
+    <br><br>
+    
+    <input name="image_url" placeholder="URL slike (optional)">
+    
+    <br><br>
+    
+    <button>Objavi</button>
+</form>
 
-        <!-- Nova objava -->
-        <div class="post-form">
-            <h3>Nova objava</h3>
-            <form method="POST" action="/dodaj_objavo">
-                <textarea name="besedilo" rows="3" placeholder="Kaj imaš novega?"></textarea>
-                <input type="text" name="slika_url" placeholder="URL slike (neobvezno)">
-                <button type="submit">Objavi</button>
-            </form>
-        </div>
+<hr>
 
-        <!-- Objave -->
-        {% for post in posts %}
-        <div class="post">
-            
-            <div class="post-header">
-                {{ post.avtor }}
-            </div>
+<ul>
+    {% for p in posts %}
+        <li>
+            {{ p.user }}: {{ p.text }}
 
-            <div class="post-date">
-                {{ post.datum }}
-            </div>
-
-            <p>{{ post.besedilo }}</p>
-
-            {% if post.slika %}
-                <img src="{{ post.slika }}">
+            {% if p.image %}
+                <br>
+                <img src="{{ p.image }}" width="200">
             {% endif %}
-
-            {% if post.avtor == username %}
-                <button class="delete-btn" onclick="izbrisiObjavo({{ post.doc_id }})">
-                    Izbriši
-                </button>
-            {% endif %}
-
-        </div>
-        {% endfor %}
-
-        {% if not posts %}
-            <p>Ni še nobene objave.</p>
-        {% endif %}
-
-    </div>
-
-    <script>
-        function izbrisiObjavo(post_id) {
-            if (confirm("Ali res želiš izbrisati to objavo?")) {
-                fetch(`/api/izbrisi/${post_id}`, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert(data.message || "Napaka pri brisanju");
-                    }
-                });
-            }
-        }
-    </script>
+        </li>
+    {% endfor %}
+</ul>
 
 </body>
 </html>

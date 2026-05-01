@@ -1,82 +1,105 @@
 from flask import Flask, render_template, request, redirect, session, jsonify
 from tinydb import TinyDB, Query
 
-app = Flask( __name__, template_folder="templates1", static_folder="static1")
-app.secret_key = "skrivnost123"
+app = Flask(__name__)
+app.secret_key = "skrivnost"
 
+# -------------------------
+# PODATKOVNA BAZA
+# -------------------------
 db = TinyDB("db.json")
 users = db.table("users")
 
 User = Query()
 
-# homepage
+# -------------------------
+# HOME
+# -------------------------
 @app.route("/")
 def home():
     if "user" in session:
         return redirect("/dashboard")
     return redirect("/login")
 
+
+# -------------------------
+# REGISTER
+# -------------------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
 
+        # preveri če obstaja
         if users.search(User.username == username):
             return "Uporabnik že obstaja"
-        
-        users.insert({"username" : username, "password" : password, "note" : ""})
+
+        # shrani v bazo
+        users.insert({
+            "username": username,
+            "password": password
+        })
+
         return redirect("/login")
 
-        # print(username, password)
     return render_template("register.html")
 
-@app.route("/login", methods = ["GET", "POST"])
-def login():
 
+# -------------------------
+# LOGIN + SESSION
+# -------------------------
+@app.route("/login", methods=["GET", "POST"])
+def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
 
         user = users.get(User.username == username)
-        #print(user)
 
         if user and user["password"] == password:
-            session["user"] = username 
+            session["user"] = username   # SESSION
             return redirect("/dashboard")
-        
+
         return "Napačen login"
 
     return render_template("login.html")
 
-@app.route("/dashboard", methods=["GET", "POST"])
+
+# -------------------------
+# DASHBOARD (SINHRONO)
+# -------------------------
+@app.route("/dashboard")
 def dashboard():
     if "user" not in session:
         return redirect("/login")
-    user = users.get(User.username == session["user"])
 
-    if "notes" not in user:
-        user["notes"] = [{"title": "", "content": ""} for _ in range(3)]
-        users.update({"notes": user["notes"]}, User.username == session["user"])
+    return render_template("dashboard.html", user=session["user"])
 
-    if request.method == "POST":
-        action = request.form.get("action")
-        index = int(request.form.get("note_index", 0))
 
-      
-        while len(user["notes"]) <= index:
-            user["notes"].append({"title": "", "content": ""})
-
-        if action == "save":
-            user["notes"][index]["title"] = request.form.get("title", "")
-            user["notes"][index]["content"] = request.form.get("content", "")
-        elif action == "delete":
-            user["notes"][index] = {"title": "", "content": ""}
-
-       
-        users.update({"notes": user["notes"]}, User.username == session["user"])
+# -------------------------
+# AJAX (ASINHRONO)
+# -------------------------
+@app.route("/api/user")
+def api_user():
+    if "user" not in session:
+        return jsonify({"error": "Nisi prijavljen"})
 
     user = users.get(User.username == session["user"])
-    return render_template("dashboard.html", user=session["user"], notes=user["notes"])
+    return jsonify(user)
 
-app.run(debug=1)
+
+# -------------------------
+# LOGOUT
+# -------------------------
+@app.route("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect("/login")
+
+
+# -------------------------
+# RUN
+# -------------------------
+if __name__ == "__main__":
+    app.run(debug=True)
