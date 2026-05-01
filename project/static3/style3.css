@@ -1,15 +1,25 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f7fb;
+    background: linear-gradient(to right, #e3f2fd, #f5f7fb);
     margin: 0;
 }
 
 .navbar {
     background-color: #4CAF50;
-    padding: 15px;
+    padding: 15px 30px;
     color: white;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    font-weight: bold;
 }
 
 .container {
@@ -20,10 +30,15 @@ body {
 
 .card {
     background: white;
-    padding: 15px;
+    padding: 20px;
     margin: 15px 0;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
 }
 
 button {
@@ -31,8 +46,9 @@ button {
     color: white;
     border: none;
     padding: 10px 15px;
-    border-radius: 5px;
+    border-radius: 7px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 button:hover {
@@ -43,7 +59,7 @@ input, textarea, select {
     width: 100%;
     padding: 10px;
     margin: 8px 0;
-    border-radius: 5px;
+    border-radius: 7px;
     border: 1px solid #ccc;
 }
 
@@ -58,11 +74,11 @@ a:hover {
 
 .form-box {
     background: white;
-    padding: 20px;
-    width: 300px;
+    padding: 25px;
+    width: 320px;
     margin: auto;
     margin-top: 100px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     text-align: center;
 }

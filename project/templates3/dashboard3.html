@@ -1,17 +1,29 @@
-<h2>Izgubljeni ljubljenčki</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
 
-<a href="/add">+ Dodaj objavo</a>
-<a href="/logout">Logout</a>
-
-<hr>
-
-{% for pet in pets %}
-<div style="border:1px solid black; margin:10px; padding:10px;">
-    <h3>{{ pet.name }} ({{ pet.animal }})</h3>
-    <p>{{ pet.description }}</p>
-    <p>{{ pet.location }}</p>
-    <p>{{ pet.status }}</p>
-
-    <a href="/pet/{{ loop.index0 }}">Poglej</a>
+<div class="navbar">
+    <h2>Pet App</h2>
+    <a href="/add">+ Dodaj žival</a>
 </div>
-{% endfor %}
+
+<div class="container">
+    <h2>Vse živali</h2>
+
+    {% for pet in pets %}
+        <div class="card">
+            <h3>{{ pet.name }}</h3>
+            <p><b>Vrsta:</b> {{ pet.animal }}</p>
+            <p>{{ pet.description }}</p>
+
+            <a href="/pet/{{ loop.index }}">Poglej več</a>
+        </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

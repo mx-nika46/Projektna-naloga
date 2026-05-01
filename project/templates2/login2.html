@@ -4,26 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prijava - App2</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
 </head>
-<body class="auth-page">
-    <div class="container">
+
+<body>
+    <div class="form-box">
         <h1>Prijava</h1>
         
         {% if request.method == 'POST' %}
-            <p class="error">Napačno uporabniško ime ali geslo!</p>
+            <p style="color:red;">Napačno uporabniško ime ali geslo!</p>
         {% endif %}
         
         <form method="POST">
-            <label for="username">Uporabniško ime</label>
-            <input type="text" id="username" name="username" required autofocus>
-            
-            <label for="password">Geslo</label>
-            <input type="password" id="password" name="password" required>
+            <input type="text" name="username" placeholder="Uporabniško ime" required autofocus>
+            <input type="password" name="password" placeholder="Geslo" required>
             
             <button type="submit">Prijavi se</button>
         </form>
         
-        <p>Še nimaš računa? <a href="/register2">Registriraj se tukaj</a></p>
+        <p>Še nimaš računa? <a href="/register2">Registriraj se</a></p>
     </div>
 </body>
 </html>

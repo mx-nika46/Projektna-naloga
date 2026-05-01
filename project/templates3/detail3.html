@@ -1,9 +1,26 @@
-<h2>{{ pet.name }}</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
 
-<p>Vrsta: {{ pet.animal }}</p>
-<p>Opis: {{ pet.description }}</p>
-<p>Lokacija: {{ pet.location }}</p>
-<p>Status: {{ pet.status }}</p>
-<p>Kontakt: {{ pet.contact }}</p>
+<div class="navbar">
+    <h2>{{ pet.name }}</h2>
+    <a href="/dashboard">Nazaj</a>
+</div>
 
-<a href="/dashboard">Nazaj</a>
+<div class="container">
+    <div class="card">
+        <h2>{{ pet.name }}</h2>
+        <p><b>Vrsta:</b> {{ pet.animal }}</p>
+        <p><b>Opis:</b> {{ pet.description }}</p>
+        <p><b>Lokacija:</b> {{ pet.location }}</p>
+        <p><b>Kontakt:</b> {{ pet.contact }}</p>
+        <p><b>Status:</b> {{ pet.status }}</p>
+    </div>
+</div>
+
+</body>
+</html>

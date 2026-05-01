@@ -1,19 +1,34 @@
-<h2>Dodaj objavo</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dodaj žival</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
+</head>
+<body>
 
-<form method="POST">
-    <input name="name" placeholder="Ime"><br>
-    <input name="animal" placeholder="Vrsta"><br>
-    <input name="location" placeholder="Lokacija"><br>
-    <input name="contact" placeholder="Kontakt"><br>
+<div class="navbar">
+    <h2>Dodaj žival</h2>
+    <a href="/dashboard">Nazaj</a>
+</div>
 
-    <select name="status">
-        <option value="izgubljen">Izgubljen</option>
-        <option value="najden">Najden</option>
-    </select><br>
+<div class="container">
+    <div class="card">
+        <form method="POST">
+            <input name="name" placeholder="Ime živali" required>
+            <input name="animal" placeholder="Vrsta" required>
+            <textarea name="description" placeholder="Opis"></textarea>
+            <input name="location" placeholder="Lokacija">
+            <input name="contact" placeholder="Kontakt">
+            
+            <select name="status">
+                <option value="lost">Izgubljen</option>
+                <option value="found">Najden</option>
+            </select>
 
-    <textarea name="description" placeholder="Opis"></textarea><br>
+            <button type="submit">Shrani</button>
+        </form>
+    </div>
+</div>
 
-    <button>Dodaj</button>
-</form>
-
-<a href="/dashboard">Nazaj</a>
+</body>
+</html>

@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request, redirect, session
 from tinydb import TinyDB, Query
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="templates3",
+    static_folder="static3"
+)
+
 app.secret_key = "skrivnost123"
 
 db = TinyDB("db.json")
@@ -9,7 +14,6 @@ users = db.table("users")
 pets = db.table("pets")
 
 User = Query()
-Pet = Query()
 
 # HOME
 @app.route("/")
@@ -35,7 +39,7 @@ def register():
 
         return redirect("/login")
 
-    return render_template("register.html")
+    return render_template("register3.html")
 
 # LOGIN
 @app.route("/login", methods=["GET", "POST"])
@@ -52,24 +56,18 @@ def login():
 
         return "Napačen login"
 
-    return render_template("login.html")
+    return render_template("login3.html")
 
-# LOGOUT
-@app.route("/logout")
-def logout():
-    session.pop("user", None)
-    return redirect("/login")
-
-# DASHBOARD (seznam živali)
+# DASHBOARD
 @app.route("/dashboard")
 def dashboard():
     if "user" not in session:
         return redirect("/login")
 
     all_pets = pets.all()
-    return render_template("dashboard.html", pets=all_pets)
+    return render_template("dashboard3.html", pets=all_pets)
 
-# DODAJ OBJAVO
+# ADD PET
 @app.route("/add", methods=["GET", "POST"])
 def add():
     if "user" not in session:
@@ -95,13 +93,17 @@ def add():
 
         return redirect("/dashboard")
 
-    return render_template("add_pet.html")
+    return render_template("add_pet3.html")
 
 # DETAIL
 @app.route("/pet/<int:pet_id>")
 def pet_detail(pet_id):
-    pet = pets.all()[pet_id]
-    return render_template("detail.html", pet=pet)
+    pet = pets.get(doc_id=pet_id)
+    if not pet:
+        return "Pet ne obstaja"
 
+    return render_template("detail3.html", pet=pet)
+
+# RUN
 if __name__ == "__main__":
     app.run(debug=True)

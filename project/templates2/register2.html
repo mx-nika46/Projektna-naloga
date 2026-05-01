@@ -4,26 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registracija</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
 </head>
-<body class="auth-page">
-    <div class="container">
+
+<body>
+
+    <div class="form-box">
         <h1>Registracija</h1>
         
         {% if error %}
-            <p class="error">{{ error }}</p>
+            <p style="color:red;">{{ error }}</p>
         {% endif %}
         
         <form method="POST">
-            <label for="username">Uporabniško ime</label>
-            <input type="text" id="username" name="username" required autofocus>
-            
-            <label for="password">Geslo</label>
-            <input type="password" id="password" name="password" required>
+            <input type="text" name="username" placeholder="Uporabniško ime" required autofocus>
+            <input type="password" name="password" placeholder="Geslo" required>
             
             <button type="submit">Registriraj se</button>
         </form>
         
-        <p>Že imaš račun? <a href="/login2">Prijavi se tukaj</a></p>
+        <p>Že imaš račun? <a href="/login2">Prijavi se</a></p>
     </div>
+
 </body>
 </html>
