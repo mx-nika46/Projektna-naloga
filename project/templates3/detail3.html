@@ -6,21 +6,31 @@
 </head>
 <body>
 
-<div class="navbar">
-    <h2>{{ pet.name }}</h2>
-    <a href="/dashboard">Nazaj</a>
-</div>
+<h1>{{ pet.name }}</h1>
 
-<div class="container">
-    <div class="card">
-        <h2>{{ pet.name }}</h2>
-        <p><b>Vrsta:</b> {{ pet.animal }}</p>
-        <p><b>Opis:</b> {{ pet.description }}</p>
-        <p><b>Lokacija:</b> {{ pet.location }}</p>
-        <p><b>Kontakt:</b> {{ pet.contact }}</p>
-        <p><b>Status:</b> {{ pet.status }}</p>
-    </div>
-</div>
+<p><b>Vrsta:</b> {{ pet.type }}</p>
+<p><b>Status:</b> {{ pet.status }}</p>
+<p><b>Opis:</b> {{ pet.description }}</p>
+<p><b>Telefon:</b> {{ pet.phone }}</p>
+
+{% if pet.image %}
+    <img src="{{ pet.image }}" width="300">
+{% endif %}
+
+<hr>
+
+<h3>Komentarji</h3>
+
+{% for c in pet.comments %}
+    <p>💬 {{ c }}</p>
+{% endfor %}
+
+<form method="POST" action="/comment3/{{ pet.doc_id }}">
+    <input name="comment" placeholder="Napiši komentar">
+    <button>Dodaj komentar</button>
+</form>
+
+<a href="/dashboard3">Nazaj</a>
 
 </body>
 </html>

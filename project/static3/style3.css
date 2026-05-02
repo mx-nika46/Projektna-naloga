@@ -1,84 +1,32 @@
-* {
-    box-sizing: border-box;
-}
-
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #e3f2fd, #f5f7fb);
-    margin: 0;
+    font-family: Arial;
+    background: linear-gradient(to right, #ffecd2, #fcb69f);
 }
 
-.navbar {
-    background-color: #4CAF50;
-    padding: 15px 30px;
+h1 {
+    text-align: center;
     color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
-.navbar a {
-    color: white;
-    font-weight: bold;
-}
-
-.container {
-    width: 80%;
-    margin: auto;
-    margin-top: 30px;
-}
-
-.card {
+form {
     background: white;
     padding: 20px;
-    margin: 15px 0;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    transition: 0.2s;
+    margin: 20px auto;
+    width: 300px;
+    border-radius: 10px;
 }
 
-.card:hover {
-    transform: scale(1.02);
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-input, textarea, select {
+input, button {
     width: 100%;
     padding: 10px;
-    margin: 8px 0;
-    border-radius: 7px;
-    border: 1px solid #ccc;
+    margin: 5px 0;
 }
 
-a {
-    text-decoration: none;
-    color: #4CAF50;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.form-box {
+.pet-card {
     background: white;
-    padding: 25px;
-    width: 320px;
-    margin: auto;
-    margin-top: 100px;
-    border-radius: 12px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    width: 300px;
+    margin: 10px auto;
+    padding: 10px;
+    border-radius: 10px;
     text-align: center;
 }

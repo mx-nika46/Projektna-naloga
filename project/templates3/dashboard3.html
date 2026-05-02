@@ -1,29 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Pets</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style3.css') }}">
 </head>
 <body>
 
-<div class="navbar">
-    <h2>Pet App</h2>
-    <a href="/add">+ Dodaj žival</a>
+<h1>Ljubljenčki</h1>
+
+<a href="/add3">+ Dodaj</a>
+
+<hr>
+
+{% for pet in pets %}
+
+<div class="pet-card">
+
+    <h3>{{ pet.name }}</h3>
+
+    <p>{{ pet.type }}</p>
+
+    <p>{{ pet.status }}</p>
+
+    {% if pet.image %}
+        <img src="{{ pet.image }}" width="200">
+    {% endif %}
+
+    <br>
+
+    <a href="/pet3/{{ pet.doc_id }}">Poglej</a>
+
+    {% if pet.owner == session["user"] %}
+        <a href="/delete3/{{ pet.doc_id }}">Izbriši</a>
+    {% endif %}
+
 </div>
 
-<div class="container">
-    <h2>Vse živali</h2>
-
-    {% for pet in pets %}
-        <div class="card">
-            <h3>{{ pet.name }}</h3>
-            <p><b>Vrsta:</b> {{ pet.animal }}</p>
-            <p>{{ pet.description }}</p>
-
-            <a href="/pet/{{ loop.index }}">Poglej več</a>
-        </div>
-    {% endfor %}
-</div>
+{% endfor %}
 
 </body>
 </html>
